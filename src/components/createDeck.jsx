@@ -9,14 +9,14 @@ class CreateDeck extends Component {
        <div className="form-group">
          <label htmlFor="label">Deck Name</label>
          <input className="form-control"
-           name="label" />
+           name="newDeckName" onChange={e => {this.props.onDeckChange(e)}}/>
        </div>
        <div className="form-group">
          <label htmlFor="description">Description</label>
          <textarea className="form-control"
-           name="description" />
+           name="newDeckDescription" onChange={e => {this.props.onDeckChange(e)}} />
        </div>
-       <button type="submit" className="btn btn-primary" onClick={this.props.editDeck}>
+       <button type="submit" className="btn btn-primary" onClick={this.props.onAddDeck}>
           Create Deck
        </button>
      </form>

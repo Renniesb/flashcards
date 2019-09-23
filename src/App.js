@@ -3,15 +3,39 @@ import React from 'react';
 import './App.css';
 import CreateDeck from './components/createDeck';
 import EditDeck from './components/editDeck';
+import Deck from './deck'
 
 class App extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { isCreateState: false, isEmptyState: true,
+    this.state = {
+      isCreateState: false,
+      isEmptyState: true,
+      newDeckName: "",
+      newDeckDescription: "",
       decks: [
         {name: "Deck 1", cards: [{front: "Rennie", back: "32"},{front: "22", back: "19"}]},
         {name: "Deck 2", cards: [{front: "Hello", back: "Moto"},{front: "Here", back: "You go"}]}
       ] }
+  }
+
+  handleDeckChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  }
+
+  handleDeckAdd = () => {
+    this.setState(state => {
+      let createDeck = new Deck(state.newDeckName, state.newDeckDescription);
+      let {...newDeck} = createDeck;
+      let decks = [...state.decks, newDeck];
+      return {
+        decks: decks,
+        newDeckName: '',
+        newDeckDescription: '',
+      };
+    });
+
+    this.triggerEditDeckState()
   }
 
   handleCardChange = (event,deck,card) => {
@@ -50,7 +74,7 @@ class App extends React.Component {
           </button>
         </span>
 
-          {this.state.isCreateState && <CreateDeck editDeck={this.triggerEditDeckState}/>}
+          {this.state.isCreateState && <CreateDeck onDeckChange={this.handleDeckChange} onAddDeck={this.handleDeckAdd}/>}
 
           {this.state.isEditDeckState && <EditDeck decks={this.state.decks} onHandleCardChange={this.handleCardChange} />}
         </header>
