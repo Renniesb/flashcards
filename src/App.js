@@ -7,7 +7,21 @@ import EditDeck from './components/editDeck';
 class App extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { isCreateState: false, isEmptyState: true }
+    this.state = { isCreateState: false, isEmptyState: true,
+      decks: [
+        {name: "Deck 1", cards: [{front: "Rennie", back: "32"},{front: "22", back: "19"}]},
+        {name: "Deck 2", cards: [{front: "Hello", back: "Moto"},{front: "Here", back: "You go"}]}
+      ] }
+  }
+
+  handleCardChange = (event,deck,card) => {
+      const decks = [...this.state.decks];
+      const index = decks.indexOf(deck);
+      const {...deckChanged} = deck;
+      decks[index] = deckChanged;
+      const index2 = decks[index].cards.indexOf(card);
+      decks[index].cards[index2][event.target.name] = event.target.value;
+      this.setState({decks});
   }
   triggerEditDeckState = () => {
   this.setState({
@@ -38,7 +52,7 @@ class App extends React.Component {
 
           {this.state.isCreateState && <CreateDeck editDeck={this.triggerEditDeckState}/>}
 
-          {this.state.isEditDeckState && <EditDeck />}
+          {this.state.isEditDeckState && <EditDeck decks={this.state.decks} onHandleCardChange={this.handleCardChange} />}
         </header>
 
       </div>

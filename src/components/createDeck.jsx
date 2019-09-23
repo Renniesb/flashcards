@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 class CreateDeck extends Component {
 
-
   render() {
     return (
       <form className="demoForm">
