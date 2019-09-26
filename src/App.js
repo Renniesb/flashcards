@@ -3,6 +3,7 @@ import React from 'react';
 import './App.css';
 import CreateDeck from './components/createDeck';
 import EditDeck from './components/editDeck';
+import ViewDecks from './components/viewDecks';
 import Deck from './deck'
 import Card from './card'
 
@@ -11,8 +12,8 @@ class App extends React.Component {
     super(props)
     this.state = {
       isCreateState: false,
-      isEmptyState: true,
       isEditDeckState: false,
+      isViewDecksState: false,
       currentDeck:{name: "Deck 2", cards: [{front: "Hello", back: "Moto"},{front: "Here", back: "You go"}]} ,
       newDeckName: "",
       newDeckDescription: "",
@@ -55,19 +56,16 @@ class App extends React.Component {
   }
 
   addNewDeck = () => {
-    this.setState(state => {
-      let createDeck = new Deck(state.newDeckName, state.newDeckDescription);
-      let {...newDeck} = createDeck;
-      let decks = [...state.decks, newDeck];
-      return {
-        currentDeck: newDeck,
+    let createDeck = new Deck(this.state.newDeckName, this.state.newDeckDescription);
+    let {...newDeck} = createDeck;
+    let decks = [...this.state.decks, newDeck];
+    this.setState({
         decks: decks,
         newDeckName: '',
         newDeckDescription: '',
-      };
     });
 
-    this.triggerEditDeckState()
+    this.triggerEditDeckState(newDeck)
   }
 
   handleDeckChange = (event,deck) => {
@@ -88,18 +86,27 @@ class App extends React.Component {
       decks[index].cards[index2][event.target.name] = event.target.value;
       this.setState({decks});
   }
-  triggerEditDeckState = () => {
+  triggerEditDeckState = (deck) => {
+
   this.setState({
+    currentDeck: deck,
     isCreateState: false,
-    isEmptyState: false,
-    isEditDeckState: true
+    isEditDeckState: true,
+    isViewDecksState: false,
   })
   }
   triggerCreateState = () => {
     this.setState({
       isCreateState: true,
-      isEmptyState: false,
-      isEditDeckState: false
+      isEditDeckState: false,
+      isViewDecksState: false,
+    })
+  }
+  triggerViewDecksState = () => {
+    this.setState({
+      isCreateState: false,
+      isEditDeckState: false,
+      isViewDecksState: true,
     })
   }
   render(){
@@ -110,7 +117,7 @@ class App extends React.Component {
           <button className="btn btn-primary" onClick={this.triggerCreateState}>
             + Create New Flashcard Deck
           </button>
-          <button className="btn btn-primary">
+          <button className="btn btn-primary" onClick={this.triggerViewDecksState}>
             + View Flashcard Decks
           </button>
         </span>
@@ -123,6 +130,10 @@ class App extends React.Component {
           currentDeck={this.state.currentDeck} onHandleDeckChange={this.handleDeckChange}
           onHandleCardChange={this.handleCardChange}
            />}
+
+          {this.state.isViewDecksState && <ViewDecks decks={this.state.decks} onEditDeck={this.triggerEditDeckState} />}
+
+
         </header>
 
       </div>

@@ -31,12 +31,12 @@ class EditDeck extends Component {
              value = {this.props.newCardFront} name="newCardFront" onChange={e => {this.props.onNewCardChange(e)}}/>
          </div>
          <div className="form-group">
-           <label htmlFor="description">Description</label>
+           <label htmlFor="description">Card Back</label>
            <textarea className="form-control" value = {this.props.newCardBack}
              name="newCardBack" onChange={e => {this.props.onNewCardChange(e)}} />
          </div>
          <button type="submit" className="btn btn-primary" onClick={e=>{this.props.onCardAdd(e)}}>
-            Create Deck
+            Create Card
          </button>
        </form>
 
