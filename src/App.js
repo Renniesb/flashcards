@@ -25,8 +25,17 @@ class App extends React.Component {
       ] }
   }
 
-  handleNewValuesAdded = event => {
-    this.setState({ [event.target.name]: event.target.value });
+  addNewDeck = () => {
+    let createDeck = new Deck(this.state.newDeckName, this.state.newDeckDescription);
+    let {...newDeck} = createDeck;
+    let decks = [...this.state.decks, newDeck];
+    this.setState({
+        decks: decks,
+        newDeckName: '',
+        newDeckDescription: '',
+    });
+
+    this.triggerEditDeckState(newDeck)
   }
 
   addCardToDeck = (e) => {
@@ -54,18 +63,26 @@ class App extends React.Component {
     e.preventDefault();
 
   }
+  deleteDeck = (e, deck) => {
+    const decks = this.state.decks.filter( d => d !== deck );
+    this.setState({decks})
 
-  addNewDeck = () => {
-    let createDeck = new Deck(this.state.newDeckName, this.state.newDeckDescription);
-    let {...newDeck} = createDeck;
-    let decks = [...this.state.decks, newDeck];
-    this.setState({
-        decks: decks,
-        newDeckName: '',
-        newDeckDescription: '',
-    });
+    e.preventDefault();
+  }
 
-    this.triggerEditDeckState(newDeck)
+  deleteCard = (e, card) => {
+    const decks = [...this.state.decks];
+    const index = decks.indexOf(this.state.currentDeck);
+    let {...copyOfCurrentDeck} = this.state.currentDeck;
+    const cards = this.state.currentDeck.cards.filter(c => c !== card );
+    copyOfCurrentDeck.cards = cards;
+    decks[index] = copyOfCurrentDeck;
+
+    this.setState({decks, currentDeck: copyOfCurrentDeck});
+  }
+
+  handleNewValuesAdded = event => {
+    this.setState({ [event.target.name]: event.target.value });
   }
 
   handleDeckChange = (event,deck) => {
@@ -84,16 +101,16 @@ class App extends React.Component {
       decks[index] = deckChanged;
       const index2 = decks[index].cards.indexOf(card);
       decks[index].cards[index2][event.target.name] = event.target.value;
-      this.setState({decks});
+      this.setState({decks, currentDeck: decks[index]});
   }
   triggerEditDeckState = (deck) => {
 
-  this.setState({
-    currentDeck: deck,
-    isCreateState: false,
-    isEditDeckState: true,
-    isViewDecksState: false,
-  })
+    this.setState({
+      currentDeck: deck,
+      isCreateState: false,
+      isEditDeckState: true,
+      isViewDecksState: false,
+    })
   }
   triggerCreateState = () => {
     this.setState({
@@ -128,10 +145,10 @@ class App extends React.Component {
           newCardFront={this.state.newCardFront} newCardBack={this.state.newCardBack}
           onNewCardChange={this.handleNewValuesAdded} onCardAdd={this.addCardToDeck}
           currentDeck={this.state.currentDeck} onHandleDeckChange={this.handleDeckChange}
-          onHandleCardChange={this.handleCardChange}
+          onHandleCardChange={this.handleCardChange} onDeleteCard={this.deleteCard}
            />}
 
-          {this.state.isViewDecksState && <ViewDecks decks={this.state.decks} onEditDeck={this.triggerEditDeckState} />}
+          {this.state.isViewDecksState && <ViewDecks decks={this.state.decks} onEditDeck={this.triggerEditDeckState} onDeleteDeck={this.deleteDeck}/>}
 
 
         </header>

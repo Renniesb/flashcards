@@ -12,17 +12,19 @@ class EditDeck extends Component {
          <textarea name="description" value={this.props.currentDeck.description}
           onChange={(e)=>{this.props.onHandleDeckChange(e,this.props.currentDeck)}}
          ></textarea>
-        <ul>{this.props.currentDeck.cards.map((card)=>{
+        {this.props.currentDeck.cards.map((card)=>{
 
             return (
-              <li> Front: <textarea name="front" value = {card.front}
-            onChange = {(e)=>{this.props.onHandleCardChange(e,this.props.currentDeck,card)}}/>
-              <br/> Back: <textarea name="back" value = {card.back}
-            onChange = {(e) => {this.props.onHandleCardChange(e,this.props.currentDeck,card)}}/>
-             </li>
+              <div> Front: <textarea name="front" value = {card.front}
+            onChange = { e => this.props.onHandleCardChange(e,this.props.currentDeck,card)}/>
+               Back: <textarea name="back" value = {card.back}
+            onChange = {e => this.props.onHandleCardChange(e,this.props.currentDeck,card)}/>
+              <button onClick={ e => { if (window.confirm('Are you sure you wish to delete this item?')) this.props.onDeleteCard(e,card)}
+              }>Delete</button>
+             </div>
            )
         })}
-        </ul>
+
         <form className="newCard">
          <h3>Create a new Card</h3>
          <div className="form-group">
