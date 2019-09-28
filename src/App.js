@@ -23,7 +23,7 @@ class App extends React.Component {
       newCardFront: "",
       newCardBack: "",
       decks: [
-        {name: "Deck 1", cards: [{front: "Rennie", back: "32"},{front: "22", back: "19"}]},
+        {name: "Deck 1", cards: [{front: "Rennie", back: "32"},{front: "22", back: "19"}, {front: "My name", back: "is Shaft"}]},
         {name: "Deck 2", cards: [{front: "Hello", back: "Moto"},{front: "Here", back: "You go"}]}
       ] }
   }
@@ -106,6 +106,7 @@ class App extends React.Component {
       decks[index].cards[index2][event.target.name] = event.target.value;
       this.setState({decks, currentDeck: decks[index]});
   }
+
   triggerEditDeckState = (deck) => {
 
     this.setState({
@@ -113,6 +114,7 @@ class App extends React.Component {
       isCreateState: false,
       isEditDeckState: true,
       isViewDecksState: false,
+      isStudyDeckState: false,
     })
   }
   triggerCreateState = () => {
@@ -122,11 +124,21 @@ class App extends React.Component {
       isViewDecksState: false,
     })
   }
+  triggerStudyDeckState = deck => {
+    this.setState({
+      currentDeck: deck,
+      isCreateState: false,
+      isEditDeckState: false,
+      isViewDecksState: false,
+      isStudyDeckState: true,
+    });
+  }
   triggerViewDecksState = () => {
     this.setState({
       isCreateState: false,
       isEditDeckState: false,
       isViewDecksState: true,
+      isStudyDeckState: false,
     })
   }
   render(){
@@ -151,7 +163,7 @@ class App extends React.Component {
           onHandleCardChange={this.handleCardChange} onDeleteCard={this.deleteCard}
            />}
 
-          {this.state.isViewDecksState && <ViewDecks decks={this.state.decks} onEditDeck={this.triggerEditDeckState} onDeleteDeck={this.deleteDeck}/>}
+          {this.state.isViewDecksState && <ViewDecks decks={this.state.decks} onEditDeck={this.triggerEditDeckState} onDeleteDeck={this.deleteDeck} onStudyDeck={this.triggerStudyDeckState}/>}
           {this.state.isStudyDeckState && <StudyDeck currentDeck={this.state.currentDeck} />}
 
         </header>

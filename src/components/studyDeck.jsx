@@ -43,9 +43,9 @@ import React, {Component} from 'react';
       return (
         <div>
           <h1>{this.props.currentDeck.name}</h1>
-          <button name="goBack" disabled={this.state.cardIndex == 0} onClick={(e)=>{this.handleCardChange(e)}}>back</button>
+          <button name="goBack" disabled={this.state.cardIndex === 0} onClick={(e)=>{this.handleCardChange(e)}}>back</button>
           {this.props.currentDeck.cards[this.state.cardIndex][this.state.cardSide]}
-          <button disabled={this.state.cardIndex == this.props.currentDeck.cards.length - 1} name="forward" onClick={(e)=>{this.handleCardChange(e)}}>forward</button>
+          <button disabled={this.state.cardIndex === this.props.currentDeck.cards.length - 1} name="forward" onClick={(e)=>{this.handleCardChange(e)}}>forward</button>
           <button name="flip" onClick={(e)=>{this.handleCardChange(e)}}>Flip Card</button>
         </div>
       )
