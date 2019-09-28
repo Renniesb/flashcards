@@ -4,17 +4,20 @@ import './App.css';
 import CreateDeck from './components/createDeck';
 import EditDeck from './components/editDeck';
 import ViewDecks from './components/viewDecks';
+import StudyDeck from './components/studyDeck';
 import Deck from './deck'
 import Card from './card'
+
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      isStudyDeckState: true,
       isCreateState: false,
       isEditDeckState: false,
       isViewDecksState: false,
-      currentDeck:{name: "Deck 2", cards: [{front: "Hello", back: "Moto"},{front: "Here", back: "You go"}]} ,
+      currentDeck:{name: "Sample Deck", cards: [{front: "Hello", back: "Moto"},{front: "Here", back: "You go"}]} ,
       newDeckName: "",
       newDeckDescription: "",
       newCardFront: "",
@@ -149,7 +152,7 @@ class App extends React.Component {
            />}
 
           {this.state.isViewDecksState && <ViewDecks decks={this.state.decks} onEditDeck={this.triggerEditDeckState} onDeleteDeck={this.deleteDeck}/>}
-
+          {this.state.isStudyDeckState && <StudyDeck currentDeck={this.state.currentDeck} />}
 
         </header>
 
