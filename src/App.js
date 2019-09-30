@@ -7,7 +7,23 @@ import ViewDecks from './components/viewDecks';
 import StudyDeck from './components/studyDeck';
 import Deck from './deck'
 import Card from './card'
+import styled from 'styled-components';
+import {Button} from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
+
+const StyledButton = styled.button`
+  color: palevioletred;
+  background-color: white;
+	font-size: 1em;
+	margin: 1em;
+	padding: 0.25em 1em;
+	border: 2px solid palevioletred;
+	border-radius: 3px;
+  &:hover {
+    background: #D3D3D3;
+  }
+`;
 
 class App extends React.Component {
   constructor(props) {
@@ -122,6 +138,7 @@ class App extends React.Component {
       isCreateState: true,
       isEditDeckState: false,
       isViewDecksState: false,
+      isStudyDeckState: false,
     })
   }
   triggerStudyDeckState = deck => {
@@ -146,13 +163,14 @@ class App extends React.Component {
       <div className="App">
         <header className="App-header">
         <span>
-          <button className="btn btn-primary" onClick={this.triggerCreateState}>
+          <StyledButton onClick={this.triggerCreateState}>
             + Create New Flashcard Deck
-          </button>
-          <button className="btn btn-primary" onClick={this.triggerViewDecksState}>
-            + View Flashcard Decks
-          </button>
+          </StyledButton>
+          <StyledButton onClick={this.triggerViewDecksState}>
+              View Flashcard Decks
+          </StyledButton>
         </span>
+        </header>
 
           {this.state.isCreateState && <CreateDeck onNewDeckChange={this.handleNewValuesAdded} onAddDeck={this.addNewDeck}/>}
 
@@ -166,7 +184,6 @@ class App extends React.Component {
           {this.state.isViewDecksState && <ViewDecks decks={this.state.decks} onEditDeck={this.triggerEditDeckState} onDeleteDeck={this.deleteDeck} onStudyDeck={this.triggerStudyDeckState}/>}
           {this.state.isStudyDeckState && <StudyDeck currentDeck={this.state.currentDeck} />}
 
-        </header>
 
       </div>
     );
