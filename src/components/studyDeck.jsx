@@ -5,9 +5,7 @@ import {Container} from 'react-bootstrap';
 import {Row} from 'react-bootstrap';
 import {Col} from 'react-bootstrap';
 import ReactCardFlip from 'react-card-flip';
-
-
-
+import BgTitle from '../BgTitle';
 
  class StudyDeck extends Component {
 
@@ -57,24 +55,24 @@ import ReactCardFlip from 'react-card-flip';
               <h3 style={{marginTop: 25, marginBottom: 20}}>Studying: {this.props.currentDeck.name}</h3>
               <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="horizontal">
                 <Card key="front">
-                  <Card.Header as="h4">Term:</Card.Header>
+                  <BgTitle className="card-header" as="h4" >Term:</BgTitle>
                   <Card.Body>
                     <Card.Title as="h4" style={{minHeight: 150}} className="h-100 align-items-center justify-content-center d-flex">
                     {this.props.currentDeck.cards[this.state.cardIndex]["front"]}
                     </Card.Title>
                     <div className="text-right">
-                      <Button name="flip" onClick={(e)=>{this.handleCardChange(e)}}>Flip Card</Button>
+                      <Button variant="secondary" name="flip" onClick={(e)=>{this.handleCardChange(e)}}>Flip Card</Button>
                     </div>
                   </Card.Body>
                 </Card>
                 <Card key="back">
-                  <Card.Header as="h4">Definition:</Card.Header>
+                  <BgTitle className="card-header" as="h4">Definition:</BgTitle>
                   <Card.Body>
                     <Card.Title as="h4" style={{minHeight: 150}} className="h-100 align-items-center justify-content-center d-flex">
                     {this.props.currentDeck.cards[this.state.cardIndex]["back"]}
                     </Card.Title>
                     <div className="text-right">
-                      <Button name="flip" onClick={(e)=>{this.handleCardChange(e)}}>Flip Card</Button>
+                      <Button variant="secondary" name="flip" onClick={(e)=>{this.handleCardChange(e)}}>Flip Card</Button>
                     </div>
                   </Card.Body>
                 </Card>

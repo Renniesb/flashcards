@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {Button} from 'react-bootstrap';
-import {Container} from 'react-bootstrap';
-import {Row} from 'react-bootstrap';
-import {Col} from 'react-bootstrap';
+import {Container, Col, Row} from 'react-bootstrap';
+
 
 class CreateDeck extends Component {
+
 
   render() {
     return (

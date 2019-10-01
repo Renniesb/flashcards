@@ -1,19 +1,20 @@
 import React from 'react';
 // import logo from './logo.svg';
-import './App.css';
 import CreateDeck from './components/createDeck';
 import EditDeck from './components/editDeck';
 import ViewDecks from './components/viewDecks';
 import StudyDeck from './components/studyDeck';
 import Deck from './deck'
 import Card from './card'
+import {Button, Col, Row, Container, Alert} from 'react-bootstrap';
+import './App.css';
 import styled from 'styled-components';
-import {Button} from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
-const StyledButton = styled.button`
+
+
+const StyledButton = styled(Button)`
   color: palevioletred;
   background-color: white;
 	font-size: 1em;
@@ -21,9 +22,7 @@ const StyledButton = styled.button`
 	padding: 0.25em 1em;
 	border: 2px solid palevioletred;
 	border-radius: 3px;
-  &:hover {
-    background: #D3D3D3;
-  }
+
 `;
 
 class App extends React.Component {
@@ -34,19 +33,47 @@ class App extends React.Component {
       isCreateState: false,
       isEditDeckState: false,
       isViewDecksState: false,
-      currentDeck:{name: "Sample Deck", cards: [{front: "Hello", back: "Moto"},{front: "Here", back: "You go"}]} ,
+      currentDeck:{name: "Sample Deck", cards: [{
+        front: "Interpret",
+        back: "To execute a program in a high-level language by translating it one line at a time."},
+        {
+        front: "Program",
+        back: "A set of instructions that specifies a computation."
+      },
+        {
+          front:"Source code",
+          back:"A program in a high-level language."
+        }]} ,
       newDeckName: "",
       newDeckDescription: "",
       newCardFront: "",
       newCardBack: "",
       decks: [
-        {name: "Deck 1", cards: [{front: "Rennie", back: "32"},{front: "22", back: "19"}, {front: "My name", back: "is Shaft"}]},
-        {name: "Deck 2", cards: [{front: "Hello", back: "Moto"},{front: "Here", back: "You go"}]}
+        {name: "Sample Deck",description: "A sample deck with programming terms", cards: [{
+          front: "Interpret",
+          back: "To execute a program in a high-level language by translating it one line at a time."},
+          {
+          front: "Program",
+          back: "A set of instructions that specifies a computation."
+        },
+          {
+            front:"Source code",
+            back:"A program in a high-level language."
+          }]}
       ] }
   }
 
   addNewDeck = () => {
-    let createDeck = new Deck(this.state.newDeckName, this.state.newDeckDescription);
+    const deckName = this.state.newDeckName;
+    const deckDescription = this.state.newDeckDescription;
+    let createDeck = new Deck();
+    if(deckName !== ""){
+      createDeck.name = deckName
+    }
+    if(deckDescription !== ""){
+      createDeck.description = deckDescription
+    }
+
     let {...newDeck} = createDeck;
     let decks = [...this.state.decks, newDeck];
     this.setState({
@@ -164,10 +191,10 @@ class App extends React.Component {
       <div className="App">
         <header className="App-header">
         <span>
-          <StyledButton onClick={this.triggerCreateState}>
+          <StyledButton variant="outline-secondary" onClick={this.triggerCreateState}>
             + Create New Flashcard Deck
           </StyledButton>
-          <StyledButton onClick={this.triggerViewDecksState}>
+          <StyledButton variant="outline-secondary" onClick={this.triggerViewDecksState}>
               View Flashcard Decks
           </StyledButton>
         </span>
@@ -184,7 +211,7 @@ class App extends React.Component {
 
           {this.state.isViewDecksState && <ViewDecks decks={this.state.decks} onEditDeck={this.triggerEditDeckState} onDeleteDeck={this.deleteDeck} onStudyDeck={this.triggerStudyDeckState}/>}
           {this.state.isStudyDeckState && <StudyDeck currentDeck={this.state.currentDeck} />}
-
+          {this.state.decks.length === 0 && this.state.isViewDecksState && <Container><Row><Col md={{span: 6, offset: 3}}><Alert variant="warning" className="mt-5">You currently have no Flashcard Decks. Click Create New Flashcard Deck to add one</Alert></Col></Row></Container>}
 
       </div>
     );
