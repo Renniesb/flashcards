@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
 import {Button} from 'react-bootstrap';
-import {Card} from 'react-bootstrap';
-import {Container} from 'react-bootstrap';
-import {Row} from 'react-bootstrap';
-import {Col} from 'react-bootstrap';
+import {Card, Container, Row, Col, Alert} from 'react-bootstrap';
 import ReactCardFlip from 'react-card-flip';
 import BgTitle from '../BgTitle';
 
@@ -58,7 +55,7 @@ import BgTitle from '../BgTitle';
                   <BgTitle className="card-header" as="h4" >Term:</BgTitle>
                   <Card.Body>
                     <Card.Title as="h4" style={{minHeight: 150}} className="h-100 align-items-center justify-content-center d-flex">
-                    {this.props.currentDeck.cards[this.state.cardIndex]["front"]}
+                    {this.props.currentDeck.cards.length === 0 ? <Alert variant="warning">You have no cards in this deck, Add cards to view</Alert> : this.props.currentDeck.cards[this.state.cardIndex]["front"]}
                     </Card.Title>
                     <div className="text-right">
                       <Button variant="secondary" name="flip" onClick={(e)=>{this.handleCardChange(e)}}>Flip Card</Button>
@@ -69,7 +66,7 @@ import BgTitle from '../BgTitle';
                   <BgTitle className="card-header" as="h4">Definition:</BgTitle>
                   <Card.Body>
                     <Card.Title as="h4" style={{minHeight: 150}} className="h-100 align-items-center justify-content-center d-flex">
-                    {this.props.currentDeck.cards[this.state.cardIndex]["back"]}
+                    {this.props.currentDeck.cards.length === 0 ? <Alert variant="warning">You have no cards in this deck, Add cards to view</Alert> : this.props.currentDeck.cards[this.state.cardIndex]["back"]}
                     </Card.Title>
                     <div className="text-right">
                       <Button variant="secondary" name="flip" onClick={(e)=>{this.handleCardChange(e)}}>Flip Card</Button>
