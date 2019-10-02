@@ -62,6 +62,9 @@ class App extends React.Component {
           }]}
       ] }
   }
+  componentDidMount() {
+    document.title = 'Flashcards';
+  }
 
   addNewDeck = () => {
     const deckName = this.state.newDeckName;
