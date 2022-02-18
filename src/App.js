@@ -49,16 +49,23 @@ class App extends React.Component {
       newCardFront: "",
       newCardBack: "",
       decks: [
-        {name: "Sample Deck",description: "A sample deck with programming terms", cards: [{
-          front: "Interpret",
-          back: "To execute a program in a high-level language by translating it one line at a time."},
-          {
-          front: "Program",
-          back: "A set of instructions that specifies a computation."
+        {id: 1, deckname: "Sample Deck",deckdescription: "A sample deck with programming terms", cards: [{
+          id: 1,
+          term: "Interpret",
+          definition: "To execute a program in a high-level language by translating it one line at a time.",
+          deckid: 1
         },
           {
-            front:"Source code",
-            back:"A program in a high-level language."
+          id: 2,
+          term: "Program",
+          definition: "A set of instructions that specifies a computation.",
+          deckid: 1
+        },
+          {
+            id: 3,
+            term:"Source code",
+            definition:"A program in a high-level language.",
+            deckid: 1
           }]}
       ] }
   }
@@ -115,6 +122,11 @@ class App extends React.Component {
   }
   deleteDeck = (e, deck) => {
     const decks = this.state.decks.filter( d => d !== deck );
+    fetch(`http://localhost:8000/api/decks/${deck.id}`, {
+    method: 'DELETE'
+    })
+    .then(res => res.json())
+    .catch(err => console.log(err));
     this.setState({decks})
 
     e.preventDefault();
