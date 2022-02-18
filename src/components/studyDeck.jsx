@@ -49,7 +49,7 @@ import BgTitle from '../BgTitle';
         <Container>
           <Row>
             <Col md={{span:6, offset: 3}}>
-              <h3 style={{marginTop: 25, marginBottom: 20}}>Studying: {this.props.currentDeck.name}</h3>
+              <h3 style={{marginTop: 25, marginBottom: 20}}>Studying: {this.props.currentDeck.deckname}</h3>
               <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="horizontal">
                 <Card key="front">
                   <BgTitle className="card-header" as="h4" >Term:</BgTitle>

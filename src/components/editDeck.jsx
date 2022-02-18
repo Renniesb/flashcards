@@ -22,7 +22,7 @@ class EditDeck extends Component {
               <InputGroup.Prepend>
                 <InputGroup.Text><strong>Deck Name:</strong> </InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl name="name" value={this.props.currentDeck.name}
+              <FormControl name="name" value={this.props.currentDeck.deckname}
                 onChange={(e)=>{this.props.onHandleDeckChange(e,this.props.currentDeck)}}
               />
             </InputGroup>
@@ -30,7 +30,7 @@ class EditDeck extends Component {
               <InputGroup.Prepend>
                 <InputGroup.Text><strong>Deck Description:</strong> </InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl as="textarea" name="description" value={this.props.currentDeck.description}
+              <FormControl as="textarea" name="description" value={this.props.currentDeck.deckdescription}
                onChange={(e)=>{this.props.onHandleDeckChange(e,this.props.currentDeck)}}/>
             </InputGroup>
           </Col>

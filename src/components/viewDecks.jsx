@@ -24,8 +24,8 @@ class ViewDecks extends Component {
             return (
                 <Card key={i} className="mt-4">
                   <Card.Body>
-                    <Card.Title>{deck.name}</Card.Title>
-                    <Card.Text>{deck.description}</Card.Text>
+                    <Card.Title>{deck.deckname}</Card.Title>
+                    <Card.Text>{deck.deckdescription}</Card.Text>
                     <Card.Text className="mt-3"><strong>- {deck.cards.length} cards</strong></Card.Text>
                   </Card.Body>
                   <Card.Footer>

@@ -33,13 +33,13 @@ class App extends React.Component {
       isCreateState: false,
       isEditDeckState: false,
       isViewDecksState: false,
-      currentDeck:{name: "Sample Deck", cards: [{
+      currentDeck:{deckname: "Sample Deck", cards: [{
         front: "Interpret",
         back: "To execute a program in a high-level language by translating it one line at a time."},
         {
         front: "Program",
         back: "A set of instructions that specifies a computation."
-      },
+        },
         {
           front:"Source code",
           back:"A program in a high-level language."
@@ -48,26 +48,7 @@ class App extends React.Component {
       newDeckDescription: "",
       newCardFront: "",
       newCardBack: "",
-      decks: [
-        {id: 1, deckname: "Sample Deck",deckdescription: "A sample deck with programming terms", cards: [{
-          id: 1,
-          term: "Interpret",
-          definition: "To execute a program in a high-level language by translating it one line at a time.",
-          deckid: 1
-        },
-          {
-          id: 2,
-          term: "Program",
-          definition: "A set of instructions that specifies a computation.",
-          deckid: 1
-        },
-          {
-            id: 3,
-            term:"Source code",
-            definition:"A program in a high-level language.",
-            deckid: 1
-          }]}
-      ] }
+      decks: [] }
   }
   componentDidMount() {
     document.title = 'Flashcards';
@@ -78,21 +59,40 @@ class App extends React.Component {
     const deckDescription = this.state.newDeckDescription;
     let createDeck = new Deck();
     if(deckName !== ""){
-      createDeck.name = deckName
+      createDeck.deckname = deckName
     }
     if(deckDescription !== ""){
-      createDeck.description = deckDescription
+      createDeck.deckdescription = deckDescription
     }
-
-    let {...newDeck} = createDeck;
-    let decks = [...this.state.decks, newDeck];
-    this.setState({
+    let url = 'http://localhost:8000/api/decks/';
+    fetch(url, {
+      method: 'POST', // or 'PUT'
+      body: JSON.stringify(createDeck), // data can be `string` or {object}!
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+    .catch(error => console.error('Error:', error))
+    .then(response => {
+      console.log('Success:', response)
+      createDeck.id = response.id;
+      let {...newDeck} = createDeck;
+      console.log('new deck', newDeck);
+      let decks = [...this.state.decks, newDeck];
+      this.setState({
         decks: decks,
+        currentDeck: newDeck,
         newDeckName: '',
         newDeckDescription: '',
-    });
+      });
+      
+    }
+    );
 
-    this.triggerEditDeckState(newDeck)
+    this.triggerEditDeckState()
+
+    
+    
   }
 
   addCardToDeck = (e) => {
@@ -166,10 +166,9 @@ class App extends React.Component {
       this.setState({decks, currentDeck: decks[index]});
   }
 
-  triggerEditDeckState = (deck) => {
+  triggerEditDeckState = () => {
 
     this.setState({
-      currentDeck: deck,
       isCreateState: false,
       isEditDeckState: true,
       isViewDecksState: false,
