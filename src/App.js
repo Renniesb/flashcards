@@ -9,6 +9,8 @@ import Card from './card'
 import {Button, Col, Row, Container, Alert} from 'react-bootstrap';
 import './App.css';
 import styled from 'styled-components';
+import env from './config.js';
+
 
 
 
@@ -52,6 +54,47 @@ class App extends React.Component {
   }
   componentDidMount() {
     document.title = 'Flashcards';
+  }
+
+  getDecks = () => {
+    //use current units
+    const decksCardsHash = {}
+    // expected output: true
+    fetch(`${env.ENDPOINT}decks`)
+      .then(response => response.json())
+      .then(data =>{ 
+          data.forEach((deck)=>{ 
+            decksCardsHash[deck.id] = []
+            deck.cards = []
+          })
+          
+          this.setState({decks: data})
+      })
+      .then(
+        fetch(`${env.ENDPOINT}cards`)
+        .then(response => response.json())
+        .then(data =>{ 
+
+
+
+          //for each card find the deck and put the card in it
+          data.forEach((card)=>{
+
+              decksCardsHash[card.deckid.toString()].push(card)
+            
+          })
+          let copiedDecks = [...this.state.decks];
+
+          copiedDecks.forEach((deck)=>{
+            if(decksCardsHash[deck.id.toString()].length !== 0){
+              deck.cards = decksCardsHash[deck.id.toString()]
+            }
+          })
+
+          console.log(copiedDecks)
+          this.setState({decks: copiedDecks});
+      })
+      );
   }
 
   addNewDeck = () => {
@@ -223,7 +266,7 @@ class App extends React.Component {
           onHandleCardChange={this.handleCardChange} onDeleteCard={this.deleteCard}
            />}
 
-          {this.state.isViewDecksState && <ViewDecks decks={this.state.decks} onEditDeck={this.triggerEditDeckState} onDeleteDeck={this.deleteDeck} onStudyDeck={this.triggerStudyDeckState}/>}
+          {this.state.isViewDecksState && <ViewDecks onGetDecks={this.getDecks} decks={this.state.decks} onEditDeck={this.triggerEditDeckState} onDeleteDeck={this.deleteDeck} onStudyDeck={this.triggerStudyDeckState}/>}
           {this.state.isStudyDeckState && <StudyDeck currentDeck={this.state.currentDeck} />}
           {this.state.decks.length === 0 && this.state.isViewDecksState && <Container><Row><Col md={{span: 6, offset: 3}}><Alert variant="warning" className="mt-5">You currently have no Flashcard Decks. Click Create New Flashcard Deck to add one</Alert></Col></Row></Container>}
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {Card} from 'react-bootstrap';
 import {InputGroup} from 'react-bootstrap';
 import {FormControl} from 'react-bootstrap';
@@ -9,9 +9,15 @@ import {Button} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-class EditDeck extends Component {
+function EditDeck ({currentDeck, onHandleDeckChange,onHandleCardChange, onDeleteCard, newCardFront,newCardBack, onNewCardChange, onCardAdd}) {
 
-  render() {
+  // const [state, setState] = useState([])
+  // const [query, setQuery] = useState()
+  // useEffect(() => {
+  //     fetch("/api/data?q=" + query).then(
+  //         res => setState(res.data)
+  //     )
+  // }, [query])
 
       return (
 
@@ -22,21 +28,22 @@ class EditDeck extends Component {
               <InputGroup.Prepend>
                 <InputGroup.Text><strong>Deck Name:</strong> </InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl name="name" value={this.props.currentDeck.deckname}
-                onChange={(e)=>{this.props.onHandleDeckChange(e,this.props.currentDeck)}}
+              <FormControl name="name" value={currentDeck.deckname}
+                onChange={(e)=>{onHandleDeckChange(e,currentDeck)}}
               />
             </InputGroup>
             <InputGroup className="mb-4">
               <InputGroup.Prepend>
                 <InputGroup.Text><strong>Deck Description:</strong> </InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl as="textarea" name="description" value={this.props.currentDeck.deckdescription}
-               onChange={(e)=>{this.props.onHandleDeckChange(e,this.props.currentDeck)}}/>
+              <FormControl as="textarea" name="description" value={currentDeck.deckdescription}
+               onChange={(e)=>{onHandleDeckChange(e,currentDeck)}}/>
             </InputGroup>
           </Col>
         </Row>
 
-        {this.props.currentDeck.cards.map((card,i)=>{
+
+        {currentDeck.cards.map((card,i)=>{
 
             return (
 
@@ -51,7 +58,7 @@ class EditDeck extends Component {
                           <InputGroup.Text id="inputGroup-sizing-lg"><strong>Term</strong> </InputGroup.Text>
                         </InputGroup.Prepend>
                         <FormControl as="textarea" name="front" value = {card.front}
-                      onChange = { e => this.props.onHandleCardChange(e,this.props.currentDeck,card)}
+                      onChange = { e => onHandleCardChange(e,currentDeck,card)}
                       aria-label="With textarea" />
                       </InputGroup>
                       <InputGroup className="mb-3">
@@ -59,10 +66,10 @@ class EditDeck extends Component {
                           <InputGroup.Text id="inputGroup-sizing-lg"><strong>Definition</strong>:</InputGroup.Text>
                         </InputGroup.Prepend>
                         <FormControl name="back" value = {card.back}
-                     onChange = {e => this.props.onHandleCardChange(e,this.props.currentDeck,card)}
+                     onChange = {e => onHandleCardChange(e,currentDeck,card)}
                       as="textarea" aria-label="With textarea" />
                       </InputGroup>
-                      <Button variant="outline-dark" onClick={ e => { if (window.confirm('Are you sure you wish to delete this item?')) this.props.onDeleteCard(e,card)}
+                      <Button variant="outline-dark" onClick={ e => { if (window.confirm('Are you sure you wish to delete this item?')) onDeleteCard(e,card)}
                     }><FontAwesomeIcon icon={faTrash}/> Delete</Button>
                     </Card.Body>
                   </Card>
@@ -78,14 +85,14 @@ class EditDeck extends Component {
              <div className="form-group">
                <label htmlFor="label">Term:</label>
                <input className="form-control"
-                 value = {this.props.newCardFront} name="newCardFront" onChange={e => {this.props.onNewCardChange(e)}}/>
+                 value = {newCardFront} name="newCardFront" onChange={e => {onNewCardChange(e)}}/>
              </div>
              <div className="form-group">
                <label htmlFor="description">Definition:</label>
-               <textarea className="form-control" value = {this.props.newCardBack}
-                 name="newCardBack" onChange={e => {this.props.onNewCardChange(e)}} />
+               <textarea className="form-control" value = {newCardBack}
+                 name="newCardBack" onChange={e => {onNewCardChange(e)}} />
              </div>
-             <Button variant="secondary" className="mb-3" type="submit" onClick={e=>{this.props.onCardAdd(e)}}>
+             <Button variant="secondary" className="mb-3" type="submit" onClick={e=>{onCardAdd(e)}}>
                 Add Card
              </Button>
            </form>
@@ -96,7 +103,7 @@ class EditDeck extends Component {
       </Container>
 
       )
-  }
+  
 
 }
 

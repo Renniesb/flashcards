@@ -13,7 +13,9 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 
 class ViewDecks extends Component {
-
+  componentDidMount() {
+    this.props.onGetDecks()
+  }
   render() {
     return (
       <Container>
@@ -26,7 +28,7 @@ class ViewDecks extends Component {
                   <Card.Body>
                     <Card.Title>{deck.deckname}</Card.Title>
                     <Card.Text>{deck.deckdescription}</Card.Text>
-                    <Card.Text className="mt-3"><strong>- {deck.cards.length} cards</strong></Card.Text>
+                    <Card.Text className="mt-3"><strong>- {deck?.cards?.length} cards</strong></Card.Text>
                   </Card.Body>
                   <Card.Footer>
                   <Button className="mt-1" style={{marginRight: 10}} variant="outline-dark" onClick={()=>{this.props.onEditDeck(deck)}}><FontAwesomeIcon icon={faEdit}/> Edit</Button>
