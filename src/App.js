@@ -163,6 +163,10 @@ class App extends React.Component {
     e.preventDefault();
 
   }
+  updateDeck = (e) => {
+    
+   
+  }
   deleteDeck = (e, deck) => {
     const decks = this.state.decks.filter( d => d !== deck );
     fetch(`http://localhost:8000/api/decks/${deck.id}`, {
@@ -209,14 +213,17 @@ class App extends React.Component {
       this.setState({decks, currentDeck: decks[index]});
   }
 
-  triggerEditDeckState = () => {
+  triggerEditDeckState = (deck) => {
 
     this.setState({
+      currentDeck: deck,
       isCreateState: false,
       isEditDeckState: true,
       isViewDecksState: false,
       isStudyDeckState: false,
     })
+
+
   }
   triggerCreateState = () => {
     this.setState({
