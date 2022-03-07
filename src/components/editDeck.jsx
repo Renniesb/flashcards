@@ -6,10 +6,11 @@ import {Container} from 'react-bootstrap';
 import {Row} from 'react-bootstrap';
 import {Col} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-function EditDeck ({currentDeck, onHandleDeckChange,onHandleCardChange, onDeleteCard, newCardFront,newCardBack, onNewCardChange, onCardAdd}) {
+function EditDeck ({currentDeck,deckHash,cardsHash, onHandleDeckChange,onHandleCardChange, onDeleteCard, newCardFront,newCardBack, onNewCardChange, onCardAdd}) {
 
   // const [state, setState] = useState([])
   // const [query, setQuery] = useState()
@@ -18,9 +19,9 @@ function EditDeck ({currentDeck, onHandleDeckChange,onHandleCardChange, onDelete
   //         res => setState(res.data)
   //     )
   // }, [query])
-
+      // console.log(deckHash[currentDeck].deckdescription)
       return (
-
+      
       <Container>
         <Row>
           <Col md={{span:6, offset: 3}}>
@@ -28,7 +29,7 @@ function EditDeck ({currentDeck, onHandleDeckChange,onHandleCardChange, onDelete
               <InputGroup.Prepend>
                 <InputGroup.Text><strong>Deck Name:</strong> </InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl name="name" value={currentDeck.deckname}
+              <FormControl name="deckname" value={deckHash[currentDeck].deckname}
                 onChange={(e)=>{onHandleDeckChange(e,currentDeck)}}
               />
             </InputGroup>
@@ -36,14 +37,13 @@ function EditDeck ({currentDeck, onHandleDeckChange,onHandleCardChange, onDelete
               <InputGroup.Prepend>
                 <InputGroup.Text><strong>Deck Description:</strong> </InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl as="textarea" name="description" value={currentDeck.deckdescription}
-               onChange={(e)=>{onHandleDeckChange(e,currentDeck)}}/>
+              <FormControl as="textarea" name="deckdescription" value={deckHash[currentDeck].deckdescription} onChange={(e)=>{onHandleDeckChange(e,currentDeck)}}/>
             </InputGroup>
           </Col>
         </Row>
 
 
-        {currentDeck.cards.map((card,i)=>{
+        {cardsHash[currentDeck].map((card,i)=>{
 
             return (
 
