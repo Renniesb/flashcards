@@ -164,10 +164,6 @@ class App extends React.Component {
     e.preventDefault();
 
   }
-  updateDeck = (e) => {
-    
-   
-  }
   deleteDeck = (e, deck) => {
     const decks = this.state.decks.filter( d => d !== deck );
     fetch(`http://localhost:8000/api/decks/${deck.id}`, {
@@ -209,6 +205,17 @@ class App extends React.Component {
           }
         }
       }))
+      fetch(`${env.ENDPOINT}decks/${deckId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          deckname: editdeckname
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+        .then((response) => response.json())
+        .then((json) => console.log(json));
     }
     if(event.target.name === "deckdescription"){
       let editDeckDescription = event.target.value
@@ -222,11 +229,21 @@ class App extends React.Component {
           }
         }
       }))
+      fetch(`${env.ENDPOINT}decks/${deckId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          deckdescription: editDeckDescription
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+        .then((response) => response.json())
+        .then((json) => console.log(json));
     }
   }
-  saveChanges = () => {
-    let id = this.state.currentDeck.id
-    fetch(`${env.ENDPOINT}decks/${id}`, {
+  saveChanges = (deckId) => {
+    fetch(`${env.ENDPOINT}decks/${deckId}`, {
       method: 'PATCH',
       body: JSON.stringify({
         name: this.state.currentDeck.name,

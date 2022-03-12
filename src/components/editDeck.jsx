@@ -47,7 +47,6 @@ function EditDeck ({currentDeck,deckHash,cardsHash, onHandleDeckChange,onHandleC
 
             return (
 
-
               <Row key={i}>
                 <Col md={{span:6, offset: 3}}>
                   <Card className="mb-4">
