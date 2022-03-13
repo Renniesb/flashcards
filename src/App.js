@@ -139,27 +139,34 @@ class App extends React.Component {
     
   }
 
-  addCardToDeck = (e) => {
-
-    this.setState(state => {
-
-      const decks = [...state.decks];
-      const index = decks.indexOf(state.currentDeck);
-      let createCard = new Card(state.newCardFront, state.newCardBack);
+  addCardToDeck = (e,id) => {
+    let createCard = new Card(this.state.newCardFront, this.state.newCardBack, id);;
+    let url = 'http://localhost:8000/api/cards';
+    fetch(url, {
+      method: 'POST', // or 'PUT'
+      body: JSON.stringify(createCard), // data can be `string` or {object}!
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+    .catch(error => console.error('Error:', error))
+    .then(response => {
+      createCard.id = response.id
       let {...newCard} = createCard;
+      console.log('new card',newCard)
+      let copyCardsHash = this.state.cardsHash;
+      copyCardsHash[id] = [...copyCardsHash[id], newCard];
 
-      let {...copyOfCurrentDeck} = state.currentDeck;
-      copyOfCurrentDeck.cards.push(newCard);
-      decks[index] = copyOfCurrentDeck;
-
-
-      return {
-        decks: decks,
-        currentDeck: copyOfCurrentDeck,
-        newCardFront: '',
-        newCardBack: '',
-      };
-    });
+      this.setState({
+          cardsHash: copyCardsHash,
+          currentDeck: id,
+          newCardFront: '',
+          newCardBack: '',
+      });
+      
+    }
+    );
+   
 
     e.preventDefault();
 

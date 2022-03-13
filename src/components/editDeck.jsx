@@ -50,7 +50,7 @@ function EditDeck ({currentDeck,deckHash,cardsHash, onHandleDeckChange,onHandleC
               <Row key={i}>
                 <Col md={{span:6, offset: 3}}>
                   <Card className="mb-4">
-                    <Card.Header><strong>Card {i + 1}</strong></Card.Header >
+                    <Card.Header><strong>Card {i + 1}</strong></Card.Header>
                     <Card.Body>
                       <InputGroup className="mb-3">
                         <InputGroup.Prepend>
@@ -91,7 +91,7 @@ function EditDeck ({currentDeck,deckHash,cardsHash, onHandleDeckChange,onHandleC
                <textarea className="form-control" value = {newCardBack}
                  name="newCardBack" onChange={e => {onNewCardChange(e)}} />
              </div>
-             <Button variant="secondary" className="mb-3" type="submit" onClick={e=>{onCardAdd(e)}}>
+             <Button variant="secondary" className="mb-3" type="submit" onClick={e=>{onCardAdd(e,currentDeck)}}>
                 Add Card
              </Button>
            </form>
