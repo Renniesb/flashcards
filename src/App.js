@@ -4,6 +4,7 @@ import CreateDeck from './components/createDeck';
 import EditDeck from './components/editDeck';
 import ViewDecks from './components/viewDecks';
 import StudyDeck from './components/studyDeck';
+import SampleStudyDeck from './components/sampleStudyDeck';
 import Deck from './deck'
 import Card from './card'
 import {Button, Col, Row, Container, Alert} from 'react-bootstrap';
@@ -57,51 +58,41 @@ class App extends React.Component {
   }
   componentDidMount() {
     document.title = 'Flashcards';
+    this.getDecks();
   }
 
   getDecks = () => {
     //use current units
-    const deckHash = {}
-    const cardsHash = {}
+    let deckHash = {}
+    let cardsHash = {}
 
-    // expected output: true
-    fetch(`${env.ENDPOINT}decks`)
-      .then(response => response.json())
-      .then(decks =>{ 
+    Promise.all([fetch(`${env.ENDPOINT}decks`),fetch(`${env.ENDPOINT}cards`) ])
+      .then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
+      .then(([decks,cards]) =>{ 
           decks.forEach((deck)=>{ 
             deckHash[deck.id] = deck;
+            cardsHash[deck.id] = []
           })
-          console.log(decks);
-          console.log(deckHash)
-          this.setState({decks: decks, deckHash: deckHash})
-      })
-      .then(
-        fetch(`${env.ENDPOINT}cards`)
-        .then(response => response.json())
-        .then(cards =>{ 
-
-
-
-          //for each card find the deck and put the card in it
           cards.forEach((card)=>{
-              if(!cardsHash[card.deckid.toString()]){
-                cardsHash[card.deckid.toString()] = [card]
-              }
-              else {
-                cardsHash[card.deckid.toString()].push(card)
-              }
+            cardsHash[card.deckid].push(card)
           })
 
-          console.log(cardsHash)
-          this.setState({cardsHash: cardsHash});
+          if(decks.length === 0){
+          this.setState({decks: decks, deckHash: deckHash, cardsHash: cardsHash})
+          }
+          else {
+            this.setState({decks: decks, deckHash: deckHash, currentDeck: decks[0].id, cardsHash: cardsHash})
+          }
+
       })
-      );
   }
 
-  addNewDeck = () => {
+  addNewDeck = (e,deckid) => {
+    e.preventDefault();
     const deckName = this.state.newDeckName;
     const deckDescription = this.state.newDeckDescription;
     let createDeck = new Deck();
+    createDeck.deckid = deckid;
     if(deckName !== ""){
       createDeck.deckname = deckName
     }
@@ -123,18 +114,24 @@ class App extends React.Component {
       let {...newDeck} = createDeck;
       console.log('new deck', newDeck);
       let decks = [...this.state.decks, newDeck];
+      const deckHash = {}
+      decks.forEach((deck)=>{ 
+        deckHash[deck.id] = deck;
+      })
+      console.log(decks);
+      console.log(deckHash)
       this.setState({
         decks: decks,
+        deckHash: deckHash,
         currentDeck: newDeck,
         newDeckName: '',
         newDeckDescription: '',
-      });
-      
+      },()=>{
+        this.triggerEditDeckState(createDeck.id)
+
+      });  
     }
     );
-
-    this.triggerEditDeckState()
-
     
     
   }
@@ -155,7 +152,12 @@ class App extends React.Component {
       let {...newCard} = createCard;
       console.log('new card',newCard)
       let copyCardsHash = this.state.cardsHash;
-      copyCardsHash[id] = [...copyCardsHash[id], newCard];
+      if(!copyCardsHash[id]){
+        copyCardsHash[id] = [newCard];
+      }
+      else{
+        copyCardsHash[id].push(newCard);
+      }
 
       this.setState({
           cardsHash: copyCardsHash,
@@ -178,20 +180,48 @@ class App extends React.Component {
     })
     .then(res => res.json())
     .catch(err => console.log(err));
-    this.setState({decks})
+
+    let newCardsHash = this.state.cardsHash;
+    let newDeckHash = this.state.deckHash;
+
+    delete newCardsHash[deck.id]; 
+    delete newDeckHash[deck.id];
+
+    this.setState({
+      decks: decks,
+      cardsHash: newCardsHash,
+      deckHash: newDeckHash
+    })
 
     e.preventDefault();
   }
 
-  deleteCard = (e, card) => {
-    const decks = [...this.state.decks];
-    const index = decks.indexOf(this.state.currentDeck);
-    let {...copyOfCurrentDeck} = this.state.currentDeck;
-    const cards = this.state.currentDeck.cards.filter(c => c !== card );
-    copyOfCurrentDeck.cards = cards;
-    decks[index] = copyOfCurrentDeck;
+  deleteCard = (e,card,deckid) => {
+    console.log(card.id)
+    fetch(`http://localhost:8000/api/cards/${card.id}`,{
+      method: 'DELETE',
+    })
+    .then(res=>res.json())
+    .catch(err=>console.log(err))
+    
+    let changedCardsHash = this.state.cardsHash;
 
-    this.setState({decks, currentDeck: copyOfCurrentDeck});
+    let filteredCards = changedCardsHash[deckid].filter( c => c.id !== card.id ); 
+    changedCardsHash[deckid] = filteredCards;
+    
+    
+    this.setState({
+      cardsHash: changedCardsHash
+    })
+
+    // const decks = [...this.state.decks];
+    // const index = decks.indexOf(this.state.currentDeck);
+    // let {...copyOfCurrentDeck} = this.state.currentDeck;
+    // const cards = this.state.currentDeck.cards.filter(c => c !== card );
+    // copyOfCurrentDeck.cards = cards;
+    // decks[index] = copyOfCurrentDeck;
+
+    // this.setState({decks, currentDeck: copyOfCurrentDeck});
   }
 
   handleNewValuesAdded = event => {
@@ -201,7 +231,9 @@ class App extends React.Component {
   handleDeckChange = (event,deckId) => {
     
     if(event.target.name === "deckname"){
-
+      if(event.target.value===""){
+        event.target.value = null;
+      }
       let editdeckname = event.target.value
 
       this.setState(prevState => ({
@@ -221,11 +253,13 @@ class App extends React.Component {
           'Content-type': 'application/json; charset=UTF-8',
         },
       })
-        .then((response) => response.json())
-        .then((json) => console.log(json));
     }
     if(event.target.name === "deckdescription"){
+      if(event.target.value===""){
+        event.target.value = null;
+      }
       let editDeckDescription = event.target.value
+      console.log("event",editDeckDescription);
       console.log(editDeckDescription);
 
       this.setState(prevState => ({
@@ -245,8 +279,6 @@ class App extends React.Component {
           'Content-type': 'application/json; charset=UTF-8',
         },
       })
-        .then((response) => response.json())
-        .then((json) => console.log(json));
     }
   }
   saveChanges = (deckId) => {
@@ -263,18 +295,37 @@ class App extends React.Component {
       .then((json) => console.log(json));
   }
 
-  handleCardChange = (event,deck,card) => {
-      const decks = [...this.state.decks];
-      const index = decks.indexOf(deck);
-      const {...deckChanged} = deck;
-      decks[index] = deckChanged;
-      const index2 = decks[index].cards.indexOf(card);
-      decks[index].cards[index2][event.target.name] = event.target.value;
-      this.setState({decks, currentDeck: decks[index]});
+  handleCardChange = (event,deckid,cardid) => {
+      let cards = [...this.state.cardsHash[deckid]];
+      let cardIndex = cards.findIndex(card => card.id === cardid);
+      if(event.target.value===""){
+        event.target.value = null;
+      }
+      cards[cardIndex][event.target.name] = event.target.value;
+
+
+    
+      let newCardsHash = this.state.cardsHash;
+
+      newCardsHash[deckid.toString()] = cards;
+      
+
+      fetch(`${env.ENDPOINT}cards/${cardid}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          [event.target.name]: event.target.value
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+        .then((data) => {
+          this.setState({cardsHash: newCardsHash});
+        } );
   }
 
   triggerEditDeckState = (id) => {
-
+    console.log("deck id",id)
     this.setState({
       currentDeck: id.toString(),
       isCreateState: false,
@@ -293,9 +344,10 @@ class App extends React.Component {
       isStudyDeckState: false,
     })
   }
-  triggerStudyDeckState = deck => {
+  triggerStudyDeckState = id => {
+    console.log(id);
     this.setState({
-      currentDeck: deck,
+      currentDeck: id.toString(),
       isCreateState: false,
       isEditDeckState: false,
       isViewDecksState: false,
@@ -304,6 +356,8 @@ class App extends React.Component {
   }
   triggerViewDecksState = () => {
     this.setState({
+      newCardBack: "",
+      newCardFront: "",
       isCreateState: false,
       isEditDeckState: false,
       isViewDecksState: true,
@@ -326,7 +380,7 @@ class App extends React.Component {
 
           {this.state.isCreateState && <CreateDeck onNewDeckChange={this.handleNewValuesAdded} onAddDeck={this.addNewDeck}/>}
 
-          {this.state.isEditDeckState && <EditDeck deckHash={this.state.deckHash} cardsHash={this.state.cardsHash} decks={this.state.decks} onSaveName={this.saveName}
+          {this.state.isEditDeckState && <EditDeck onGetDecks={this.getDecks} deckHash={this.state.deckHash} cardsHash={this.state.cardsHash} decks={this.state.decks} onSaveName={this.saveName}
           newCardFront={this.state.newCardFront} newCardBack={this.state.newCardBack}
           onNewCardChange={this.handleNewValuesAdded} onCardAdd={this.addCardToDeck}
           currentDeck={this.state.currentDeck} onHandleDeckChange={this.handleDeckChange}
@@ -334,7 +388,8 @@ class App extends React.Component {
            />}
 
           {this.state.isViewDecksState && <ViewDecks cardsHash={this.state.cardsHash} onGetDecks={this.getDecks} decks={this.state.decks} onEditDeck={this.triggerEditDeckState} onDeleteDeck={this.deleteDeck} onStudyDeck={this.triggerStudyDeckState}/>}
-          {this.state.isStudyDeckState && <StudyDeck currentDeck={this.state.currentDeck} />}
+          {this.state.isStudyDeckState && this.state.decks.length === 0 && <SampleStudyDeck currentDeck={this.state.currentDeck} /> }
+          {this.state.isStudyDeckState && Object.keys(this.state.cardsHash).length !== 0 && <StudyDeck cardsHash={this.state.cardsHash} deckHash={this.state.deckHash} currentDeck={this.state.currentDeck} />}
           {this.state.decks.length === 0 && this.state.isViewDecksState && <Container><Row><Col md={{span: 6, offset: 3}}><Alert variant="warning" className="mt-5">You currently have no Flashcard Decks. Click Create New Flashcard Deck to add one</Alert></Col></Row></Container>}
 
       </div>

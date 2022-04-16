@@ -6,11 +6,18 @@ import {Container} from 'react-bootstrap';
 import {Row} from 'react-bootstrap';
 import {Col} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
+// import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function EditDeck ({currentDeck,deckHash,cardsHash, onHandleDeckChange,onHandleCardChange, onDeleteCard, newCardFront,newCardBack, onNewCardChange, onCardAdd}) {
+
+  console.log('deck hash --------',deckHash[currentDeck]);
+  console.log('cards hash --------',cardsHash);
+
+  
+  console.log('current deck id --------',currentDeck);
+
 
   // const [state, setState] = useState([])
   // const [query, setQuery] = useState()
@@ -43,7 +50,7 @@ function EditDeck ({currentDeck,deckHash,cardsHash, onHandleDeckChange,onHandleC
         </Row>
 
 
-        {cardsHash[currentDeck].map((card,i)=>{
+        {cardsHash[currentDeck] && cardsHash[currentDeck].map((card,i)=>{
 
             return (
 
@@ -57,7 +64,7 @@ function EditDeck ({currentDeck,deckHash,cardsHash, onHandleDeckChange,onHandleC
                           <InputGroup.Text id="inputGroup-sizing-lg"><strong>Term</strong> </InputGroup.Text>
                         </InputGroup.Prepend>
                         <FormControl as="textarea" name="front" value = {card.front}
-                      onChange = { e => onHandleCardChange(e,currentDeck,card)}
+                      onChange = { e => onHandleCardChange(e,currentDeck,card.id)}
                       aria-label="With textarea" />
                       </InputGroup>
                       <InputGroup className="mb-3">
@@ -65,10 +72,10 @@ function EditDeck ({currentDeck,deckHash,cardsHash, onHandleDeckChange,onHandleC
                           <InputGroup.Text id="inputGroup-sizing-lg"><strong>Definition</strong>:</InputGroup.Text>
                         </InputGroup.Prepend>
                         <FormControl name="back" value = {card.back}
-                     onChange = {e => onHandleCardChange(e,currentDeck,card)}
+                     onChange = {e => onHandleCardChange(e,currentDeck,card.id)}
                       as="textarea" aria-label="With textarea" />
                       </InputGroup>
-                      <Button variant="outline-dark" onClick={ e => { if (window.confirm('Are you sure you wish to delete this item?')) onDeleteCard(e,card)}
+                      <Button variant="outline-dark" onClick={ e => { if (window.confirm('Are you sure you wish to delete this item?')) onDeleteCard(e,card,currentDeck)}
                     }><FontAwesomeIcon icon={faTrash}/> Delete</Button>
                     </Card.Body>
                   </Card>

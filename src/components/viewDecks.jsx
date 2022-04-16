@@ -33,7 +33,7 @@ class ViewDecks extends Component {
                   <Card.Footer>
                   <Button className="mt-1" style={{marginRight: 10}} variant="outline-dark" onClick={()=>{this.props.onEditDeck(deck.id)}}><FontAwesomeIcon icon={faEdit}/> Edit</Button>
                   <Button className="mt-1" style={{marginRight: 10}} variant="outline-dark" onClick={(e) => { if (window.confirm('Are you sure you wish to delete this item?')) this.props.onDeleteDeck(e,deck) } }><FontAwesomeIcon icon={faTrash}/> Delete</Button>
-                  <Button className="mt-1" style={{marginRight: 10}} variant="outline-dark" onClick={()=>{this.props.onStudyDeck(deck)}}><FontAwesomeIcon icon={faBook}/> Study Deck</Button>
+                  <Button className="mt-1" style={{marginRight: 10}} variant="outline-dark" onClick={()=>{this.props.onStudyDeck(deck.id)}}><FontAwesomeIcon icon={faBook}/> Study Deck</Button>
                   </Card.Footer>
                 </Card>
             )
