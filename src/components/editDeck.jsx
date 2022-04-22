@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Card} from 'react-bootstrap';
 import {InputGroup} from 'react-bootstrap';
 import {FormControl} from 'react-bootstrap';
@@ -9,15 +9,28 @@ import {Button} from 'react-bootstrap';
 // import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import env from '../config.js';
+
+
 
 function EditDeck ({currentDeck,deckHash,cardsHash, onHandleDeckChange,onHandleCardChange, onDeleteCard, newCardFront,newCardBack, onNewCardChange, onCardAdd}) {
-
-  console.log('deck hash --------',deckHash[currentDeck]);
-  console.log('cards hash --------',cardsHash);
-
+  const [filteredQuizzes, setQuizzes] = useState([{id: 1, quizname: 'Loading...'}]);
+  const [quizid, setQuizId] = useState(Number(deckHash[currentDeck].quizid));
   
-  console.log('current deck id --------',currentDeck);
+  useEffect(() => {
+    Promise.all([
+      fetch(`https://still-garden-93095.herokuapp.com/api/quiz`),
+      fetch(`${env.ENDPOINT}decks`),
+    ]).then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
+    .then(([quizzes, decks]) => {
+      let quizIdsList = decks.map(deck=> deck.quizid)
+      let quizList = quizzes.filter(quiz=>!quizIdsList.includes(quiz.id) || Number(deckHash[currentDeck].quizid))
+      setQuizzes(quizList)
+    }).catch((err) => {
+        console.log(err);
+    });
 
+  })
 
   // const [state, setState] = useState([])
   // const [query, setQuery] = useState()
@@ -101,6 +114,10 @@ function EditDeck ({currentDeck,deckHash,cardsHash, onHandleDeckChange,onHandleC
              <Button variant="secondary" className="mb-3" type="submit" onClick={e=>{onCardAdd(e,currentDeck)}}>
                 Add Card
              </Button>
+             <h2 style={{"paddingTop": "10px"}}>Link to a quiz</h2>
+             <select name="quizid" onChange={event => setQuizId(event.target.value)} id="select" value={quizid}>
+               {filteredQuizzes.map(quiz=><option key={quiz.id+1} value={quiz.id}>{quiz.quizname}</option>)}
+             </select>
            </form>
           </Col>
 

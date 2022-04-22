@@ -9,7 +9,8 @@ import BgTitle from '../BgTitle';
    state = {
      cardIndex: 0,
      isFlipped: false,
-     cardNumber: 1
+     cardNumber: 1,
+     cardRight: true
    }
 
 
@@ -28,7 +29,7 @@ import BgTitle from '../BgTitle';
         this.setState(prevState => {
 
 
-          return {cardIndex: prevState.cardIndex + 1, isFlipped: false, cardNumber: prevState.cardNumber + 1}
+          return {cardIndex: prevState.cardIndex + 1, isFlipped: false, cardNumber: prevState.cardNumber + 1, cardRight: true}
 
         })
 
@@ -37,7 +38,7 @@ import BgTitle from '../BgTitle';
       if (name === "goBack"){
         this.setState(prevState => {
 
-          return {cardIndex: prevState.cardIndex - 1, isFlipped: false, cardNumber: prevState.cardNumber - 1}
+          return {cardIndex: prevState.cardIndex - 1, isFlipped: false, cardNumber: prevState.cardNumber - 1, cardRight: false}
 
         })
       }
@@ -51,38 +52,52 @@ import BgTitle from '../BgTitle';
         return true
       }
     }
+    cardContents=(side)=>{
+      let contents = this.props.cardsHash[this.props.currentDeck][this.state.cardIndex][side]
+      let imageLink = "imagelink"
+      if(this.isDeckEmpty()){
+        return <Alert variant="warning">You have no cards in this deck, Add cards to view</Alert>
+      } else if(contents.includes(imageLink)) {
+        let link = contents.replace(imageLink,'').trim()
+        return <img alt="flashcard content" className="quizimg" src={link} />
+      } else {
+        return contents
+      }
+    }
     render(){
       // this.props.cardsHash[this.props.currentDeck].length
       console.log(this.props.cardsHash)
       return (
-        <Container>
+      <Container>
           <Row>
             <Col md={{span:6, offset: 3}}>
               <h3 style={{marginTop: 25, marginBottom: 20}}>Studying: {this.props.deckHash[this.props.currentDeck].deckname}</h3>
-              <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="horizontal">
-                <Card key="front">
-                  <BgTitle className="card-header" as="h4" >Term:</BgTitle>
-                  <Card.Body>
-                    <Card.Title as="h4" style={{minHeight: 150}} className="h-100 align-items-center justify-content-center d-flex">
-                    { this.isDeckEmpty() ? <Alert variant="warning">You have no cards in this deck, Add cards to view</Alert> : this.props.cardsHash[this.props.currentDeck][this.state.cardIndex]["front"]}
-                    </Card.Title>
-                    <div className="text-right">
-                      <Button variant="secondary" name="flip" onClick={(e)=>{this.handleCardChange(e)}}>Flip Card</Button>
-                    </div>
-                  </Card.Body>
-                </Card>
-                <Card key="back">
-                  <BgTitle className="card-header" as="h4">Definition:</BgTitle>
-                  <Card.Body>
-                    <Card.Title as="h4" style={{minHeight: 150}} className="h-100 align-items-center justify-content-center d-flex">
-                    {this.isDeckEmpty() ? <Alert variant="warning">You have no cards in this deck, Add cards to view</Alert> : this.props.cardsHash[this.props.currentDeck][this.state.cardIndex]["back"]}
-                    </Card.Title>
-                    <div className="text-right">
-                      <Button variant="secondary" name="flip" onClick={(e)=>{this.handleCardChange(e)}}>Flip Card</Button>
-                    </div>
-                  </Card.Body>
-                </Card>
-              </ReactCardFlip>
+              <div key={this.state.cardNumber} className={this.state.cardRight ? 'swing-in-right-bck' : 'swing-in-left-bck'}>
+                <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="horizontal">
+                  <Card key="front">
+                    <BgTitle className="card-header" as="h4" >Term:</BgTitle>
+                    <Card.Body>
+                      <Card.Title as="h4" style={{minHeight: 150}} className="h-100 align-items-center justify-content-center d-flex">
+                      {this.cardContents("front")}
+                      </Card.Title>
+                      <div className="text-right">
+                        <Button variant="secondary" name="flip" onClick={(e)=>{this.handleCardChange(e)}}>Flip Card</Button>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                  <Card key="back">
+                    <BgTitle className="card-header" as="h4">Definition:</BgTitle>
+                    <Card.Body>
+                      <Card.Title as="h4" style={{minHeight: 150}} className="h-100 align-items-center justify-content-center d-flex">
+                      {this.cardContents("back")}
+                      </Card.Title>
+                      <div className="text-right">
+                        <Button variant="secondary" name="flip" onClick={(e)=>{this.handleCardChange(e)}}>Flip Card</Button>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </ReactCardFlip>
+              </div>
             </Col>
           </Row>
           <Row>

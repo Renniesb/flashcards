@@ -87,12 +87,12 @@ class App extends React.Component {
       })
   }
 
-  addNewDeck = (e,deckid) => {
+  addNewDeck = (e,quizid) => {
     e.preventDefault();
     const deckName = this.state.newDeckName;
     const deckDescription = this.state.newDeckDescription;
     let createDeck = new Deck();
-    createDeck.deckid = deckid;
+    createDeck.quizid = quizid;
     if(deckName !== ""){
       createDeck.deckname = deckName
     }
@@ -123,11 +123,11 @@ class App extends React.Component {
       this.setState({
         decks: decks,
         deckHash: deckHash,
-        currentDeck: newDeck,
+        currentDeck: newDeck.id,
         newDeckName: '',
         newDeckDescription: '',
       },()=>{
-        this.triggerEditDeckState(createDeck.id)
+        this.triggerEditDeckState(newDeck.id)
 
       });  
     }
@@ -280,6 +280,27 @@ class App extends React.Component {
         },
       })
     }
+    if(event.target.name === "quizid"){
+      let editquizid = event.target.value
+
+      this.setState(prevState => ({
+        deckHash: {
+          [deckId]: {                     // specific object of food object
+            ...prevState[deckId],   // copy all pizza key-value pairs
+            quizid: editquizid          // update value of specific key
+          }
+        }
+      }))
+      fetch(`${env.ENDPOINT}decks/${deckId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          quizid: editquizid
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+    }
   }
   saveChanges = (deckId) => {
     fetch(`${env.ENDPOINT}decks/${deckId}`, {
@@ -327,7 +348,7 @@ class App extends React.Component {
   triggerEditDeckState = (id) => {
     console.log("deck id",id)
     this.setState({
-      currentDeck: id.toString(),
+      currentDeck: id,
       isCreateState: false,
       isEditDeckState: true,
       isViewDecksState: false,

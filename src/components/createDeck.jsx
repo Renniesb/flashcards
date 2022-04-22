@@ -6,8 +6,8 @@ import env from '../config.js';
 
 
 function CreateDeck({onNewDeckChange,onAddDeck}) {
-  const [filteredQuizzes, setQuizzes] = useState([]);
-  const [deckId, setDeckId] = useState(0);
+  const [filteredQuizzes, setQuizzes] = useState([{id: 1, quizname: 'Loading...'}]);
+  const [quizid, setQuizId] = useState(0);
   
   useEffect(() => {
     Promise.all([
@@ -15,9 +15,9 @@ function CreateDeck({onNewDeckChange,onAddDeck}) {
       fetch(`${env.ENDPOINT}decks`),
     ]).then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
     .then(([quizzes, decks]) => {
-      let deckIdsList = decks.map(deck=> deck.deckid)
-      let quizList = quizzes.filter(quiz=>!deckIdsList.includes(quiz.id))
-      setDeckId(quizList[0].id)
+      let quizIdsList = decks.map(deck=> deck.quizid)
+      let quizList = quizzes.filter(quiz=>!quizIdsList.includes(quiz.id))
+      setQuizId(quizList[0].id)
       setQuizzes(quizList)
     }).catch((err) => {
         console.log(err);
@@ -42,10 +42,10 @@ function CreateDeck({onNewDeckChange,onAddDeck}) {
                  name="newDeckDescription" onChange={e => {onNewDeckChange(e)}} />
              </div>
              <h2 style={{"paddingTop": "10px"}}>Link to a quiz</h2>
-             <select onChange={event => setDeckId(event.target.value)} id="select" value={deckId}>
+             <select onChange={event => setQuizId(event.target.value)} id="select" value={quizid}>
                {filteredQuizzes.map(quiz=><option key={quiz.id+1} value={quiz.id}>{quiz.quizname}</option>)}
              </select>
-             <Button style={{"marginTop": "15px"}} variant="secondary" type="submit" className="btn btn-primary" onClick={(e)=>{onAddDeck(e,deckId)}}>
+             <Button style={{"marginTop": "15px"}} variant="secondary" type="submit" className="btn btn-primary" onClick={(e)=>{onAddDeck(e,quizid)}}>
                 Create Deck
              </Button>
            </form>
