@@ -1,8 +1,8 @@
 export default class card {
-  constructor(front,back,deckid){
+  constructor(front,back,quizid){
     this.front = front;
     this.back = back;
-    this.deckid=deckid;
+    this.quizid=quizid;
   }
 
 }

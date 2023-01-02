@@ -44,7 +44,7 @@ import BgTitle from '../BgTitle';
 
     }
     render(){
-
+      console.log('deck',this.props.currentDeck)
       return (
         <Container>
           <Row>

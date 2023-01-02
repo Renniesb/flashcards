@@ -15,6 +15,7 @@ import env from '../config.js';
 
 function EditDeck ({currentDeck,deckHash,cardsHash, onHandleDeckChange,onHandleCardChange, onDeleteCard, newCardFront,newCardBack, onNewCardChange, onCardAdd}) {
   const [filteredQuizzes, setQuizzes] = useState([{id: 1, quizname: 'Loading...'}]);
+  console.log('the current deck', currentDeck );
   const [quizid, setQuizId] = useState(Number(deckHash[currentDeck].quizid));
   
   useEffect(() => {
@@ -24,13 +25,15 @@ function EditDeck ({currentDeck,deckHash,cardsHash, onHandleDeckChange,onHandleC
     ]).then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
     .then(([quizzes, decks]) => {
       let quizIdsList = decks.map(deck=> deck.quizid)
-      let quizList = quizzes.filter(quiz=>!quizIdsList.includes(quiz.id) || Number(deckHash[currentDeck].quizid))
+      let quizList = quizzes.filter(quiz=>!quizIdsList.includes(quiz.id) || quizIdsList.includes(quizid));
+      // let quizList = quizzes.filter(quiz=>!quizIdsList.includes(quiz.id));
+
       setQuizzes(quizList)
     }).catch((err) => {
         console.log(err);
     });
 
-  })
+  },[quizid]);
 
   // const [state, setState] = useState([])
   // const [query, setQuery] = useState()
@@ -40,6 +43,12 @@ function EditDeck ({currentDeck,deckHash,cardsHash, onHandleDeckChange,onHandleC
   //     )
   // }, [query])
       // console.log(deckHash[currentDeck].deckdescription)
+      // onChange={(e)=>{onHandleDeckChange(e,currentDeck)}
+      const changeQuizId = (e) => {
+        setQuizId(e.target.value);
+        onHandleDeckChange(e,currentDeck)
+
+      }
       return (
       
       <Container>
@@ -115,7 +124,7 @@ function EditDeck ({currentDeck,deckHash,cardsHash, onHandleDeckChange,onHandleC
                 Add Card
              </Button>
              <h2 style={{"paddingTop": "10px"}}>Link to a quiz</h2>
-             <select name="quizid" onChange={event => setQuizId(event.target.value)} id="select" value={quizid}>
+             <select name="quizid" onChange={e => changeQuizId(e)} id="select" value={quizid}>
                {filteredQuizzes.map(quiz=><option key={quiz.id+1} value={quiz.id}>{quiz.quizname}</option>)}
              </select>
            </form>

@@ -16,14 +16,14 @@ function CreateDeck({onNewDeckChange,onAddDeck}) {
     ]).then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
     .then(([quizzes, decks]) => {
       let quizIdsList = decks.map(deck=> deck.quizid)
-      let quizList = quizzes.filter(quiz=>!quizIdsList.includes(quiz.id))
+      let quizList = quizzes.filter(quiz=>!quizIdsList.includes(quiz.id)|| quizIdsList.includes(quizid))
       setQuizId(quizList[0].id)
       setQuizzes(quizList)
     }).catch((err) => {
         console.log(err);
     });
 
-  }, [])
+  }, [quizid])
 
     return (
       <Container>
