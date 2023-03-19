@@ -11,7 +11,7 @@ function CreateDeck({onNewDeckChange,onAddDeck}) {
   
   useEffect(() => {
     Promise.all([
-      fetch(`${env.ENDPOINT}quiz`),
+      fetch(`${env.Quizzes}quiz`),
       fetch(`${env.ENDPOINT}decks`),
     ]).then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
     .then(([quizzes, decks]) => {
