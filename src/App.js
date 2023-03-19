@@ -90,7 +90,7 @@ class App extends React.Component {
     if(deckDescription !== ""){
       createDeck.deckdescription = deckDescription
     }
-    let url = 'http://localhost:8000/api/decks/';
+    let url = `${env.ENDPOINT}decks/`;
     fetch(url, {
       method: 'POST', // or 'PUT'
       body: JSON.stringify(createDeck), // data can be `string` or {object}!
@@ -129,7 +129,7 @@ class App extends React.Component {
 
   addCardToDeck = (e,quizid) => {
     let createCard = new Card(this.state.newCardFront, this.state.newCardBack, quizid);
-    let url = 'http://localhost:8000/api/cards';
+    let url = `${env.ENDPOINT}cards`;
     fetch(url, {
       method: 'POST', // or 'PUT'
       body: JSON.stringify(createCard), // data can be `string` or {object}!
@@ -165,7 +165,7 @@ class App extends React.Component {
   }
   deleteDeck = (e, deck) => {
     const decks = this.state.decks.filter( d => d !== deck );
-    fetch(`http://localhost:8000/api/decks/${deck.id}`, {
+    fetch(`${env.ENDPOINT}decks/${deck.id}`, {
     method: 'DELETE'
     })
     .then(res => res.json())
@@ -188,7 +188,7 @@ class App extends React.Component {
 
   deleteCard = (e,card,quizid) => {
     console.log(card.id)
-    fetch(`http://localhost:8000/api/cards/${card.id}`,{
+    fetch(`${env.ENDPOINT}cards/${card.id}`,{
       method: 'DELETE',
     })
     .then(res=>res.json())

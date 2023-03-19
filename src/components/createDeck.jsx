@@ -11,7 +11,7 @@ function CreateDeck({onNewDeckChange,onAddDeck}) {
   
   useEffect(() => {
     Promise.all([
-      fetch(`https://still-garden-93095.herokuapp.com/api/quiz`),
+      fetch(`${env.ENDPOINT}quiz`),
       fetch(`${env.ENDPOINT}decks`),
     ]).then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
     .then(([quizzes, decks]) => {
