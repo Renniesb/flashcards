@@ -75,7 +75,9 @@ class App extends React.Component {
             this.setState({decks: decks, deckHash: deckHash, currentDeck: deckValue, cardsHash: cardsHash})
           }
 
-      })
+      }).catch((err) => {
+        console.log(err);
+    });
   }
 
   addNewDeck = (e,quizid) => {
