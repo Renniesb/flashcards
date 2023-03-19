@@ -1,1 +1,1 @@
-export default { ENDPOINT: process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000/api/', Quizzes: process.env.React_Quizzes_Endpoint || 'https://still-garden-93095.herokuapp.com/api/' }
+export default { ENDPOINT: process.env.REACT_APP_API_ENDPOINT || 'http://localhost:8000/api/', Quizzes: process.env.REACT_QUIZZES_ENDPOINT || 'https://still-garden-93095.herokuapp.com/api/' }
