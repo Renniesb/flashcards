@@ -30,7 +30,7 @@ export default function EditCard({
   const [open2, setOpen2] = useState(false);
 
   return (
-    <Row key={cardkey}>
+    <Row>
       <Col md={{ span: 6, offset: 3 }}>
         <Card className="mb-4">
           <Card.Header>
@@ -96,7 +96,7 @@ export default function EditCard({
                     data-gramm_editor="false"
                     data-enable-grammarly="false"
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     placeholder="text"
                     value={ftext}
                     onChange={(e) => {
@@ -117,7 +117,7 @@ export default function EditCard({
                   Image/Gif link{" "}
                   <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     placeholder="gif or image link"
                     value={fimage}
                     onChange={(e) => {
@@ -138,7 +138,7 @@ export default function EditCard({
                   Sound link{" "}
                   <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     placeholder="sound link"
                     value={fsound}
                     onChange={(e) => {
@@ -219,7 +219,7 @@ export default function EditCard({
                     data-gramm_editor="false"
                     data-enable-grammarly="false"
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     placeholder="text"
                     value={btext}
                     onChange={(e) => {
@@ -240,7 +240,7 @@ export default function EditCard({
                   Image/Gif link{" "}
                   <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     placeholder="gif or image link"
                     value={bimage}
                     height="150px"
@@ -263,7 +263,7 @@ export default function EditCard({
                   Sound link{" "}
                   <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     placeholder="sound link"
                     value={bsound}
                     onChange={(e) => {

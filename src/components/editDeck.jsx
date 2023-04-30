@@ -134,6 +134,7 @@ function EditDeck({
           const backContents = card.back?.split("^") || [];
           return (
             <EditCard
+              key={card.id}
               cardkey={i}
               card={card}
               onHandleCardChange={onHandleCardChange}

@@ -142,7 +142,7 @@ class App extends React.Component {
       }
     }).then(res => res.json())
     .then(response => {
-      createCard.id = response.quizid
+      createCard.id = response.id;
       let {...newCard} = createCard;
       console.log('new card',newCard)
       let copyCardsHash = this.state.cardsHash;
