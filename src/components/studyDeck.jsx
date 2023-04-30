@@ -3,6 +3,8 @@ import {Button} from 'react-bootstrap';
 import {Card, Container, Row, Col, Alert} from 'react-bootstrap';
 import ReactCardFlip from 'react-card-flip';
 import BgTitle from '../BgTitle';
+import ReactAudioPlayer from "react-audio-player";
+
 
  class StudyDeck extends Component {
 
@@ -66,15 +68,22 @@ import BgTitle from '../BgTitle';
     cardContents=(side)=>{
 
       let contents = this.props.currentDeck !== "0" ? this.props.cardsHash[this.props.currentDeck][this.state.cardIndex]?.[side] : this.state.sampleCards[this.state.cardIndex][side];
-      let imageLink = "imagelink";
+      const card = contents.split('^');
+
+      let text = <h4 style={{marginBottom: '20px'}}>{card[0]}</h4>;
+      let imageLink = <img style={{marginBottom: '20px'}} width="150vw" height="150vh" alt="flashcard content" className="quizimg" src={card[1]} />;
+      let soundLink = <ReactAudioPlayer style={{marginBottom: '10px'}} src={card[2]} controls/>
 
       if(this.isDeckEmpty() && this.props.currentDeck !== "0"){
         return <Alert variant="warning">You have no cards in this deck, Add cards to view</Alert>
-      } else if(contents.includes(imageLink)) {
-        let link = contents.replace(imageLink,'').trim()
-        return <img alt="flashcard content" className="quizimg" src={link} />
       } else {
-        return contents
+        return (
+          <div style={{minHeight: '20vh'}} className="h-100 align-items-center justify-content-center d-flex flex-column">
+            {card[1]?.trim() !== "" && typeof card[1] !== "undefined" && imageLink }
+            {card[0]?.trim() !== "" && typeof card[0] !== "undefined" && text }
+            {card[2]?.trim() !== "" && typeof card[2] !== "undefined" && soundLink}
+          </div>
+        )
       }
       
 
@@ -91,9 +100,7 @@ import BgTitle from '../BgTitle';
                   <Card key="front">
                     <BgTitle className="card-header" as="h4" >Term:</BgTitle>
                     <Card.Body>
-                      <Card.Title as="h4" style={{minHeight: 150}} className="h-100 align-items-center justify-content-center d-flex">
                       {this.cardContents("front")}
-                      </Card.Title>
                       <div className="text-right">
                         <Button variant="secondary" name="flip" onClick={(e)=>{this.handleCardChange(e)}}>Flip Card</Button>
                       </div>
@@ -102,9 +109,7 @@ import BgTitle from '../BgTitle';
                   <Card key="back">
                     <BgTitle className="card-header" as="h4">Definition:</BgTitle>
                     <Card.Body>
-                      <Card.Title as="h4" style={{minHeight: 150}} className="h-100 align-items-center justify-content-center d-flex">
-                      {this.cardContents("back")}
-                      </Card.Title>
+                        {this.cardContents("back")}
                       <div className="text-right">
                         <Button variant="secondary" name="flip" onClick={(e)=>{this.handleCardChange(e)}}>Flip Card</Button>
                       </div>

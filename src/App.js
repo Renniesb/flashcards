@@ -42,7 +42,9 @@ class App extends React.Component {
       newCardBack: "",
       decks: [],
       deckHash: {},
-      cardsHash: {}
+      cardsHash: {},
+      cardsDeleted: 0
+
       }
   }
   componentDidMount() {
@@ -129,8 +131,8 @@ class App extends React.Component {
     
   }
 
-  addCardToDeck = (e,quizid) => {
-    let createCard = new Card(this.state.newCardFront, this.state.newCardBack, quizid);
+  addCardToDeck = (e,fcard,bcard,quizid) => {
+    let createCard = new Card(fcard, bcard, quizid);
     let url = `${env.ENDPOINT}cards`;
     fetch(url, {
       method: 'POST', // or 'PUT'
@@ -203,7 +205,8 @@ class App extends React.Component {
     
     
     this.setState({
-      cardsHash: changedCardsHash
+      cardsHash: changedCardsHash,
+      cardsDeleted: card.id
     })
 
   }
