@@ -18,8 +18,6 @@ export default function EditCard({
   backContents,
   currentDeck,
   onDeleteCard,
-  changeCards,
-  cards
 }) {
   const [ftext, changeftext] = useState(frontContents[0]);
   const [fimage, changefimage] = useState(frontContents[1]);
@@ -291,7 +289,6 @@ export default function EditCard({
                 if (
                   window.confirm("Are you sure you wish to delete this item?")
                 ){
-                  changeCards(cards.filter(c => c.id !== card.id))
                   onDeleteCard(e, card, currentDeck);
                 }
               }}
